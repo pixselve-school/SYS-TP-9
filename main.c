@@ -28,14 +28,30 @@ char *beaufort_cipher(char message[], char key[]) {
 
 
 char *decrypt(char crypted_message[], char partial_decrypted_message[], int key_length) {
-    unsigned long crypted_message_length = strlen(crypted_message);
-    char *result = calloc(crypted_message_length, sizeof(char));
+    char key[key_length];
+    for (int i = 0; i < key_length; ++i) {
+        char result_char =(crypted_message[i] + partial_decrypted_message[i]) % ('Z' - 'A' + 1) + 'A';
+        key [i] = result_char;
+    }
+    return beaufort_cipher(crypted_message, key);
 }
 
 
 int main() {
-    char *result = beaufort_cipher("HELLO WORLD!", "DIANA");
-    printf("%s", result);
-    free(result);
-    return 0;
+    char *crypted_message2 =beaufort_cipher("HELLO WORLD", "DIANA");
+    printf("%s\n", crypted_message2);
+
+
+    printf("Entrer the ciphertext (max 1024 characters):\n");
+    char message[1024];
+    fgets(message, 1024, stdin);
+    printf("Entrer the key (max 1024 characters):\n");
+    char key[1024];
+    fgets(key, 1024, stdin);
+    printf("%d", strlen(key));
+    printf("%d" , strlen(message));
+    char *crypted_message = beaufort_cipher(message, key);
+    printf("The crypted message is: %s\n", crypted_message);
+
+
 }
